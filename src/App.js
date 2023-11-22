@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import AddCode from "./AddCode";
+import Codes from "./Codes";
+import Button from "./Button";
+import { useEffect, useState } from "react";
 
-function App() {
+export default function App() {
+  const [item, setItem] = useState({});
+
+  function handleSetItem(newItem) {
+    setItem(newItem);
+  }
+
+  useEffect(() => {
+    localStorage.setItem(`${item.id}`, JSON.stringify(item));
+    console.log("Effect has run");
+  }, [item]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="content">
+      <div className="side">
+        <Button content="&#43; New Code" size={20} />
+        <Codes />
+      </div>
+      <div className="form-container">
+        <AddCode onItemChange={handleSetItem} />
+      </div>
     </div>
   );
 }
-
-export default App;
