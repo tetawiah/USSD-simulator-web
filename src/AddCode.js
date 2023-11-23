@@ -16,28 +16,33 @@ export default function AddCode({ onItemChange }) {
   };
 
   return (
-    <form onSubmit={handleSubmitForm}>
-      <label htmlFor="ussd">USSD Code</label>
-      <input name="ussd"></input>
-      <br />
-      <label htmlFor="url">URL</label>
-      <input type="text" name="url"></input>
-      <br />
-      <select name="operator" defaultValue="Select operator">
-        <option disabled={true} selected>
-          Select operator
-        </option>
-        <option>MTN</option>
-        <option>Vodafone</option>
-        <option>AT</option>
-      </select>
-      <br />
-      <label htmlFor="phone" type="numebr">
-        Phone number
-      </label>
-      <input name="phone"></input>
-      <br />
-      <Button type="submit" content="Submit" size={20} />
-    </form>
+    <div className="sub-form">
+      <form className="my-form" onSubmit={handleSubmitForm}>
+        <label htmlFor="ussd">USSD Code</label>
+        <input name="ussd" className="form-input" required />
+        <br />
+        <label htmlFor="url">URL</label>
+        <input type="text" name="url" className="form-input" required />
+        <br />
+        <select
+          name="operator"
+          defaultValue="Select operator"
+          className="form-select"
+          required
+        >
+          <option disabled>Select operator</option>
+          <option>MTN</option>
+          <option>Vodafone</option>
+          <option>AT</option>
+        </select>
+        <br />
+        <label htmlFor="phone">Phone number</label>
+        <input name="phone" className="form-input" required />
+        <br />
+        <div className="form-btn-div">
+          <Button content="Submit" size={150} type="submit" />
+        </div>
+      </form>
+    </div>
   );
 }

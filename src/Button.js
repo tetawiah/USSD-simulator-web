@@ -1,5 +1,11 @@
-const Button = ({ content, size }) => (
-  <button type="submit" className="btn" style={{ size: `${size}px` }}>
+const Button = ({ content, size, onClick = () => {} }) => (
+  <button
+    id="form-btn"
+    type="submit"
+    className="btn"
+    style={{ width: `${size}px` }}
+    onClick={onClick}
+  >
     {content}
   </button>
 );
