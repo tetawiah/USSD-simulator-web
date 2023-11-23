@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function App() {
   const [item, setItem] = useState({});
   const [isOpen, setIsOpen] = useState(true);
+  const key = "ussd_data";
 
   function handleIsOpen() {
     setIsOpen(!isOpen);
@@ -16,9 +17,11 @@ export default function App() {
   }
 
   useEffect(() => {
-    console.log(Object.values(item));
+    let data = localStorage.getItem(key);
+    data = data ? JSON.parse(data) : [];
+
     if (Object.values(item).length !== 0) {
-      localStorage.setItem(`${item.id}`, JSON.stringify(item));
+      localStorage.setItem(key, JSON.stringify([...data, item]));
       console.log("App Effect has run");
     }
   }, [item]);
@@ -27,7 +30,7 @@ export default function App() {
     <div className="content">
       <div className="side">
         <Button content="&#43; New Code" size={200} onClick={handleIsOpen} />
-        <Codes newData={item} />
+        <Codes />
       </div>
       {isOpen ? (
         <div className="form-container">
