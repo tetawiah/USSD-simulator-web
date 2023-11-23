@@ -17,7 +17,7 @@ export default function Codes({ newData }) {
 
     setItems(itemsStored);
     console.log("Items effect");
-  }, [itemsStored]);
+  }, []);
 
   useEffect(() => {
     if (url) {

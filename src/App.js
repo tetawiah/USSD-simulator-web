@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function App() {
   const [item, setItem] = useState({});
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   function handleIsOpen() {
     setIsOpen(!isOpen);

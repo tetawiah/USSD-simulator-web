@@ -99,14 +99,17 @@ select {
     margin-bottom: 10px;
   }
   
-  .form-select {
-    appearance: none;
-  }
-  
   .form-btn-div {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+  }
+
+  .err-val {
+    color: red;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: small;
   }
   
   
