@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Codes({ newData }) {
+export default function Codes({ newItems }) {
   const [items, setItems] = useState([]);
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
@@ -11,13 +11,10 @@ export default function Codes({ newData }) {
     setUrl(newUrl); //if url has already been set how to handle?
   };
 
-  const itemsStored = Object.values(localStorage).map((obj) => JSON.parse(obj));
   useEffect(() => {
-    if (itemsStored.length === 0) return;
-
-    setItems(itemsStored);
+    setItems(newItems);
     console.log("Items effect");
-  }, []);
+  }, [newItems]);
 
   useEffect(() => {
     if (url) {
@@ -35,6 +32,7 @@ export default function Codes({ newData }) {
           setData(result.data);
         })
         .catch((error) => {
+          console.log(error);
           setError(error);
         });
     }
@@ -42,22 +40,28 @@ export default function Codes({ newData }) {
 
   return (
     <div className="code-side">
-      <ul>
-        {items.map((item) => (
-          <li
-            className="list-code="
-            style={{ listStyleType: "none" }}
-            key={item.id}
-          >
-            <div
-              className="code-btn"
-              onClick={() => handleItemClicked(item.url)}
+      {error ? (
+        <p className="error">
+          Oops something broke<span>&#128546;</span>
+        </p>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li
+              className="list-code="
+              style={{ listStyleType: "none" }}
+              key={item.id}
             >
-              {item.ussd}
-            </div>
-          </li>
-        ))}
-      </ul>
+              <div
+                className="code-btn"
+                onClick={() => handleItemClicked(item.url)}
+              >
+                {item.ussd}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

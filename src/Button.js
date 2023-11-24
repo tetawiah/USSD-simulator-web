@@ -1,9 +1,15 @@
-const Button = ({ content, size, onClick = () => {} }) => (
+const Button = ({
+  className = "btn",
+  content,
+  height,
+  width,
+  onClick = () => {},
+}) => (
   <button
     id="form-btn"
     type="submit"
-    className="btn"
-    style={{ width: `${size}px` }}
+    className={className}
+    style={{ width: `${width}px`, height: `${height}px` }}
     onClick={onClick}
   >
     {content}
