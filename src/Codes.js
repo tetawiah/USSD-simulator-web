@@ -1,20 +1,14 @@
 import { useEffect, useState } from "react";
 
 export default function Codes({ newItems }) {
-  const [items, setItems] = useState([]);
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
   const [error, setError] = useState("");
 
-  const handleItemClicked = (newUrl) => {
+  const handleItemClicked = (item) => {
     console.log("url is being set");
-    setUrl(newUrl); //if url has already been set how to handle?
+    setUrl(item.url); //if url has already been set how to handle?
   };
-
-  useEffect(() => {
-    setItems(newItems);
-    console.log("Items effect");
-  }, [newItems]);
 
   useEffect(() => {
     if (url) {
@@ -46,16 +40,13 @@ export default function Codes({ newItems }) {
         </p>
       ) : (
         <ul>
-          {items.map((item) => (
+          {newItems.map((item) => (
             <li
               className="list-code="
               style={{ listStyleType: "none" }}
               key={item.id}
             >
-              <div
-                className="code-btn"
-                onClick={() => handleItemClicked(item.url)}
-              >
+              <div className="code-btn" onClick={() => handleItemClicked(item)}>
                 {item.ussd}
               </div>
             </li>

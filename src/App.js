@@ -19,15 +19,24 @@ export default function App() {
   }
 
   useEffect(() => {
-    let data = localStorage.getItem(key);
-
+    const data = localStorage.getItem(key);
     const oldData = data ? JSON.parse(data) : [];
-    const newData = [...oldData, newItem];
+    if (oldData.length > 0) {
+      setItems(oldData);
+      console.log(
+        "Effect to get the old data and set it when component first mounts"
+      );
+    }
+  }, []);
 
-    if (Object.values(newItem).length !== 0) {
+  //runs on first mount also instead of depending on newItem
+  useEffect(() => {
+    const newData = [...items, newItem];
+    if (Object.values(newItem).length > 0) {
       localStorage.setItem(key, JSON.stringify(newData));
       setItems(newData);
-      console.log("App Effect has run");
+
+      console.log("Effect to set state with new data");
     }
   }, [newItem]);
 

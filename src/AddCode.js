@@ -51,8 +51,11 @@ export default function AddCode({ onItemChange }) {
   };
 
   const validateUssd = () => {
-    if (!/^\d+$/.test(ussd)) {
-      setError((err) => ({ ...err, ussd: "Enter USSD digits only" }));
+    if (!/^\*\d{3}((\*\d+)?)+#$/.test(ussd)) {
+      setError((err) => ({
+        ...err,
+        ussd: "USSD must start with * and end with #",
+      }));
     } else {
       setError((err) => ({ ...err, ussd: "" }));
     }
