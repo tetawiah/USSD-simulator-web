@@ -29,7 +29,7 @@ export default function AddCode({ onItemChange }) {
 
   const validateUrl = () => {
     if (
-      !/^(http(s):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(
+      !/^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/g.test(
         url
       )
     ) {
@@ -107,7 +107,7 @@ export default function AddCode({ onItemChange }) {
           required
           value={phone}
           onBlur={validatePhone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone("233" + e.target.value.slice(1))}
         />
         {error.phone && <p className="err-val">{error.phone}</p>}
         <br />
