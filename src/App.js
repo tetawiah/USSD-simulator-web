@@ -30,6 +30,7 @@ export default function App() {
   }
 
   function handleUserInput (input) {
+    console.log('send button clicked');
     setUserInput(input);
   }
 
@@ -69,6 +70,7 @@ export default function App() {
 
 
   useEffect(() => {
+    console.log('effect run');
     if (request.url) {
       const payload = {
         USERID : "Spectrum",
@@ -86,12 +88,13 @@ export default function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({body: payload}),
         body: JSON.stringify(payload)
 
       })
           .then((response) => response.json())
-          .then(data=> handleSetResponse(data))
+          .then(data=> {
+            console.log(data);
+            handleSetResponse(data)})
           .catch((error) => {
             console.log(error);
             setErrorCodeList(error);
@@ -112,7 +115,7 @@ export default function App() {
             <AddCode onItemChange={handleOnItemChange} />
           </div>
         ) : null}
-        <Response response={response}/>
+        {response && <Response response={response}/>}
         <InputField onSubmitInput={handleUserInput}/>
       </div>
     </div>

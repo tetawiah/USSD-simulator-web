@@ -154,16 +154,22 @@ select {
   }
 
   .res{
-    max-width: 300px;
-    height: 150px;
+    margin-top: 60px;
+    max-width: 700px;
+    height: 350px;
+    background-color: blanchedalmond;
+    text-align: center;
   }
 
-  .res-msg-container {
-    padding: 2em;
+  .res-msg-con {
+    padding: 2.4em;
+    text-align: left;
+    margin-left: 25%;
+    margin-right: 25%;
   }
 
   .res-msg {
-    font-size: 2em;
+    font-size: 2.3em;
   }
   
   

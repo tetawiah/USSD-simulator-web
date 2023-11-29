@@ -8,7 +8,7 @@ const [input,setInput] = useState("");
     <div className="field">
         <span>
           <input className="inp-field" value={input} onChange={e=>setInput(e.target.value)}></input>
-          <Button className="field-btn" content="Send" onClick={onSubmitInput(input)}></Button>
+          <Button className="field-btn" content="Send" onClick={() => onSubmitInput(input)}></Button>
         </span>
     </div>
   );
