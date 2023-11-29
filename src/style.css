@@ -159,17 +159,26 @@ select {
     height: 350px;
     background-color: blanchedalmond;
     text-align: center;
+    overflow: auto;
   }
 
   .res-msg-con {
-    padding: 2.4em;
+    padding: 0.5em 2em 2em;
     text-align: left;
     margin-left: 25%;
     margin-right: 25%;
   }
 
   .res-msg {
-    font-size: 2.3em;
+    font-size: 1.5em;
+    margin: 0;
   }
-  
+
+  .res-load{
+    font-size: 1.8em;
+    font-family: "Roboto Thin", serif;
+    text-align: center;
+    font-weight: bold;
+  }
+
   
