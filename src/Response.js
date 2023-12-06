@@ -1,4 +1,4 @@
-export default function ({response,isResLoading}) {
+export default function Response({response}) {
     return <div className="res">
         <div className="res-msg-con">
             {isResLoading ? <p className="res-load"><span>⌛</span>@ Loading....</p>
