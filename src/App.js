@@ -15,14 +15,12 @@ export default function App() {
 
   const [response,setResponse] = useState("");
   const [userInput,setUserInput] = useState("");
-  const [responseError,setResponseError] = useState("");
   const [isResLoading,setIsResLoading] = useState(false);
-  const [canDisplayInput,setDisplayInput] = useState(false);
+  const [canDisplayInput,setCanDisplayInput] = useState(false);
 
   const [request, setRequest] = useState("");
-  const [errorCodeList, setErrorCodeList] = useState("");
+  const [error, setError] = useState("");
 
-  const[selected,setSelected] = useState("");
   const[itemsEdit,setItemsEdit] = useState({});
 
   const key = "ussd_data";
@@ -43,13 +41,14 @@ export default function App() {
   function handleSetResponse(data) {
     setIsAddFormOpen(false);
     if(data.MSGTYPE === false) {
-      setDisplayInput(true);
+      setCanDisplayInput(false);
     }
     console.log(data)
     setResponse(data);
   }
 
   function handleCodeClicked (request) {
+    setCanDisplayInput(true)
     console.log("url is being set");
     const sessionID = RandomDigit();
     setRequest({...request,sessionID});
@@ -76,7 +75,10 @@ export default function App() {
     const filtered = items.filter(item=>item.id !== id);
     setItems(filtered);
     localStorage.setItem(key, JSON.stringify(filtered));
+  }
 
+  function resetError() {
+    setError("");
   }
 
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function App() {
 
       console.log("Effect to set state with new data");
     }
-  }, [newItem]);
+  }, [newItem,items]);
 
 
   useEffect(() => {
@@ -114,7 +116,7 @@ export default function App() {
         USERDATA : userInput || request.ussd ,
       };
       console.log(payload);
-      setErrorCodeList("");
+      setError("");
       console.log("sendingg request");
       setIsResLoading(true);
       fetch(request.url, {
@@ -138,7 +140,7 @@ export default function App() {
           })
           .catch((error) => {
             console.log(error);
-            setErrorCodeList(error);
+            setError(error);
             setIsResLoading(false);
           });
     }
@@ -149,7 +151,7 @@ export default function App() {
       <div className="content">
         <div className="l-side">
           <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
-          <ListCodes newItems={items} onCodeClicked={handleCodeClicked} error={errorCodeList} onClickEdit={handleOnEditClicked} onClickDelete={handleOnDeleteItem}/>
+          <ListCodes newItems={items} onCodeClicked={handleCodeClicked} onClickEdit={handleOnEditClicked} onClickDelete={handleOnDeleteItem}/>
         </div>
         <div className="r-side">
           {isAddFormOpen ? (
@@ -162,8 +164,8 @@ export default function App() {
                 <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
               </div>
           ): null}
-          {response && <Response response={response}/>}
-          <InputField onSubmitInput={handleUserInput}/>
+          {response && <Response response={response} isResLoading={isResLoading} error={error} resetError={resetError}/>}
+              {canDisplayInput && <InputField onSubmitInput={handleUserInput}/>}
         </div>
       </div>
   );

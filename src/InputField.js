@@ -13,12 +13,8 @@ const handleInput = (e) => {
     <div className="field">
         <form onSubmit={e=>handleInput(e)}>
             <span>
-                {canDisplayInput ||
-                    <>
                     <input className="inp-field" value={input} onChange={e=>setInput(e.target.value)}></input>
                     <Button className="field-btn" content="Send" type="submit"></Button>
-                    </>
-                }
         </span>
         </form>
 

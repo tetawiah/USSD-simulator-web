@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
-import RandomDigit from "./utils/RandomDigit";
 import Button from "./Button";
 
-export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClickDelete, error}) {
+export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClickDelete}) {
 
 
   return (
       <div className="code-side">
-        {error ? (
-            <p className="error">
-              Oops something broke<span>&#128546;</span>
-            </p>
-        ) : (
             <ul>
               {newItems.map((item) => (
                   <li
@@ -22,12 +15,12 @@ export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClick
                     <div className="code-btn" onClick={() => onCodeClicked(item)}>
                       {item.ussd}
                     </div>
-                    <Button content="✏️" height={50} onClick={() => onClickEdit(item.id)}></Button>
-                    <Button content="&times;" height={50} onClick={() => onClickDelete(item.id)}> </Button>
+                    <Button content="✏️" height={50} width={50} onClick={() => onClickEdit(item.id)}></Button>
+                    <Button content="&times;" height={50} width={50} onClick={() => onClickDelete(item.id)}> </Button>
                   </li>
+
               ))}
             </ul>
-        )}
       </div>
   );
 }
