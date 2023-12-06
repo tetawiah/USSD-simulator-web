@@ -21,10 +21,14 @@ export default function AddCode({ onItemChange }) {
       phone: phone,
     };
     onItemChange(newItem);
+    setUssd("");
+    setOperator("");
+    setUrl("");
+    setPhone("");
   };
 
   const validateForm = () => {
-    return error.url || error.phone || error.ussd ? false : true;
+    return error.phone || error.ussd ? false : true;
   };
 
   const validatePhone = () => {

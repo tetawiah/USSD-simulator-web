@@ -68,10 +68,16 @@ export default function App() {
       const filtered = items.filter(item => item.id !== editedItem.id);
       return newData = [...filtered,editedItem];
 
-       });
+    });
     localStorage.setItem(key, JSON.stringify(newData));
   }
 
+  function handleOnDeleteItem (id) {
+    const filtered = items.filter(item=>item.id !== id);
+    setItems(filtered);
+    localStorage.setItem(key, JSON.stringify(filtered));
+
+  }
 
   useEffect(() => {
     const data = localStorage.getItem(key);
@@ -79,7 +85,7 @@ export default function App() {
     if (oldData.length > 0) {
       setItems(oldData);
       console.log(
-        "Effect to get the old data and set it when component first mounts"
+          "Effect to get the old data and set it when component first mounts"
       );
     }
   }, []);
@@ -97,7 +103,7 @@ export default function App() {
 
 
   useEffect(() => {
-    console.log('effect run');
+    console.log('effect to make api call run');
     if (request.url) {
       const payload = {
         USERID : "Spectrum",
@@ -125,7 +131,7 @@ export default function App() {
               throw new Error("Request could not be processed");
             }
             return response.json()
-            })
+          })
           .then(data=> {
             handleSetResponse(data);
             setIsResLoading(false);
@@ -140,25 +146,25 @@ export default function App() {
 
 
   return (
-    <div className="content">
-      <div className="l-side">
-        <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
-        <ListCodes newItems={items} onCodeClicked={handleCodeClicked} error={errorCodeList} onClickEdit={handleOnEditClicked}/>
+      <div className="content">
+        <div className="l-side">
+          <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
+          <ListCodes newItems={items} onCodeClicked={handleCodeClicked} error={errorCodeList} onClickEdit={handleOnEditClicked} onClickDelete={handleOnDeleteItem}/>
+        </div>
+        <div className="r-side">
+          {isAddFormOpen ? (
+              <div className="form-container">
+                <AddCode onItemChange={handleOnItemChange} />
+              </div>
+          ) : null}
+          {isEditFormOpen ? (
+              <div className="form-container">
+                <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
+              </div>
+          ): null}
+          {response && <Response response={response}/>}
+          <InputField onSubmitInput={handleUserInput}/>
+        </div>
       </div>
-      <div className="r-side">
-        {isAddFormOpen ? (
-          <div className="form-container">
-            <AddCode onItemChange={handleOnItemChange} />
-          </div>
-        ) : null}
-        {isEditFormOpen ? (
-            <div className="form-container">
-              <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
-            </div>
-        ): null}
-        {response && <Response response={response}/>}
-        <InputField onSubmitInput={handleUserInput}/>
-      </div>
-    </div>
   );
 }
