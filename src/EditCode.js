@@ -2,25 +2,24 @@ import { useState } from "react";
 import Button from "./Button";
 import { v4 as uuidv4 } from "uuid";
 
-export default function AddCode({ onItemChange }) {
-  const [ussd, setUssd] = useState("");
-  const [operator, setOperator] = useState("Select operator");
-  const [url, setUrl] = useState("");
-  const [phone, setPhone] = useState("");
+export default function EditCode({ item,onEditItem }) {
+  const [ussd, setUssd] = useState(item.ussd);
+  const [operator, setOperator] = useState(item.operator);
+  const [url, setUrl] = useState(item.url);
+  const [phone, setPhone] = useState(item.phone);
   const [error, setError] = useState({});
 
-  const handleSubmitForm = (event) => {
+  const handleSubmitEditForm = (event) => {
     event.preventDefault();
     if (validateForm() === false) return;
-    const key = uuidv4().slice(-6);
-    const newItem = {
-      id: key,
+    const editedItem = {
+      id: item.id,
       ussd: ussd,
       url: url,
       operator: operator,
       phone: phone,
     };
-    onItemChange(newItem);
+    onEditItem(editedItem);
   };
 
   const validateForm = () => {
@@ -51,7 +50,7 @@ export default function AddCode({ onItemChange }) {
 
   return (
     <div className="sub-form">
-      <form className="my-form" onSubmit={handleSubmitForm}>
+      <form className="my-form" onSubmit={handleSubmitEditForm}>
         <label htmlFor="ussd">USSD Code</label>
         <input
           name="ussd"

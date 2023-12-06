@@ -5,11 +5,13 @@ import InputField from "./InputField";
 import { useEffect, useState } from "react";
 import Response from "./Response";
 import RandomDigit from "./utils/RandomDigit";
+import EditCode from "./EditCode";
 
 export default function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({});
-  const [isOpen, setIsOpen] = useState(true);
+  const [isAddFormOpen, setIsAddFormOpen] = useState(true);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
 
   const [response,setResponse] = useState("");
   const [userInput,setUserInput] = useState("");
@@ -18,11 +20,13 @@ export default function App() {
   const [request, setRequest] = useState("");
   const [errorCodeList, setErrorCodeList] = useState("");
 
+  const[selected,setSelected] = useState("");
+  const[itemsEdit,setItemsEdit] = useState({});
 
   const key = "ussd_data";
 
-  function handleIsOpen() {
-    setIsOpen(!isOpen);
+  function handleIsAddFormOpen() {
+    setIsAddFormOpen(!isAddFormOpen);
   }
 
   function handleOnItemChange(newItem) {
@@ -35,7 +39,7 @@ export default function App() {
   }
 
   function handleSetResponse(data) {
-    setIsOpen(false);
+    setIsAddFormOpen(false);
     console.log(data)
     setResponse(data);
   }
@@ -43,6 +47,23 @@ export default function App() {
   function handleCodeClicked (request) {
     console.log("url is being set");
     setRequest(request);
+  }
+
+  function handleOnEditClicked(id) {
+    setIsAddFormOpen(false);
+    setIsEditFormOpen(true);
+    const filtered = items.filter(item=> item.id === id )[0];
+    setItemsEdit(filtered);
+  }
+
+  function handleOnEditItem (editedItem) {
+    let newData = [];
+    setItems(items=> {
+      const filtered = items.filter(item => item.id !== editedItem.id);
+      return newData = [...filtered,editedItem];
+
+       });
+    localStorage.setItem(key, JSON.stringify(newData));
   }
 
 
@@ -106,15 +127,20 @@ export default function App() {
   return (
     <div className="content">
       <div className="l-side">
-        <Button content="&#43; New Code" width={200} onClick={handleIsOpen} />
-        <ListCodes newItems={items} onCodeClicked={handleCodeClicked} error={errorCodeList}/>
+        <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
+        <ListCodes newItems={items} onCodeClicked={handleCodeClicked} error={errorCodeList} onClickEdit={handleOnEditClicked}/>
       </div>
       <div className="r-side">
-        {isOpen ? (
+        {isAddFormOpen ? (
           <div className="form-container">
             <AddCode onItemChange={handleOnItemChange} />
           </div>
         ) : null}
+        {isEditFormOpen ? (
+            <div className="form-container">
+              <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
+            </div>
+        ): null}
         {response && <Response response={response}/>}
         <InputField onSubmitInput={handleUserInput}/>
       </div>
