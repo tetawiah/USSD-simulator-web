@@ -101,7 +101,7 @@ export default function App() {
 
       console.log("Effect to set state with new data");
     }
-  }, [newItem,items]);
+  }, [newItem]);
 
 
   useEffect(() => {
