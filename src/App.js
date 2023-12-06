@@ -16,6 +16,8 @@ export default function App() {
   const [response,setResponse] = useState("");
   const [userInput,setUserInput] = useState("");
   const [responseError,setResponseError] = useState("");
+  const [isResLoading,setIsResLoading] = useState(false);
+  const [canDisplayInput,setDisplayInput] = useState(false);
 
   const [request, setRequest] = useState("");
   const [errorCodeList, setErrorCodeList] = useState("");
@@ -40,13 +42,17 @@ export default function App() {
 
   function handleSetResponse(data) {
     setIsAddFormOpen(false);
+    if(data.MSGTYPE === false) {
+      setDisplayInput(true);
+    }
     console.log(data)
     setResponse(data);
   }
 
   function handleCodeClicked (request) {
     console.log("url is being set");
-    setRequest(request);
+    const sessionID = RandomDigit();
+    setRequest({...request,sessionID});
   }
 
   function handleOnEditClicked(id) {
@@ -96,7 +102,7 @@ export default function App() {
       const payload = {
         USERID : "Spectrum",
         MSISDN : request.phone,
-        SESSIONID : RandomDigit(),
+        SESSIONID : request.sessionID,
         NETWORK : request.operator,
         MSGTYPE : false,
         USERDATA : userInput || request.ussd ,
@@ -104,21 +110,30 @@ export default function App() {
       console.log(payload);
       setErrorCodeList("");
       console.log("sendingg request");
+      setIsResLoading(true);
       fetch(request.url, {
         method: "POST",
         headers: {
+          "Accept" : "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload)
 
       })
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request could not be processed");
+            }
+            return response.json()
+            })
           .then(data=> {
-            console.log(data);
-            handleSetResponse(data)})
+            handleSetResponse(data);
+            setIsResLoading(false);
+          })
           .catch((error) => {
             console.log(error);
             setErrorCodeList(error);
+            setIsResLoading(false);
           });
     }
   }, [request,userInput]);
