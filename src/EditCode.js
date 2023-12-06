@@ -20,6 +20,10 @@ export default function EditCode({ item,onEditItem }) {
       phone: phone,
     };
     onEditItem(editedItem);
+    setUssd("");
+    setOperator("");
+    setUrl("");
+    setPhone("");
   };
 
   const validateForm = () => {
@@ -98,7 +102,7 @@ export default function EditCode({ item,onEditItem }) {
         {error.phone && <p className="err-val">{error.phone}</p>}
         <br />
         <div className="form-btn-div">
-          <Button content="Submit" size={150} type="submit" />
+          <Button content="Confirm Change" size={150} type="submit" />
         </div>
       </form>
     </div>
