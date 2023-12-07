@@ -11,7 +11,7 @@ const handleInput = (e) => {
 }
   return (
     <div className="field">
-        <form onSubmit={e=>handleInput(e)}>
+        <form onSubmit={handleInput}>
             <span>
                     <input className="inp-field" value={input} onChange={e=>setInput(e.target.value)}></input>
                     <Button className="field-btn" content="Send" type="submit"></Button>

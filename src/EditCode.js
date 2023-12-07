@@ -5,7 +5,7 @@ import {retrieveData,compareID} from "./helpers/Helpers"
 import Button from "./Button";
 
 
-export default function EditCode({ item,items, onEditItem, selectEdit }) {
+export default function EditCode({ onEditItem, selectEdit }) {
   const [ussd, setUssd] = useState("");
   const [operator, setOperator] = useState("");
   const [url, setUrl] = useState("");
@@ -22,13 +22,12 @@ export default function EditCode({ item,items, onEditItem, selectEdit }) {
     console.log("items" + _items);
     // const filteredItem = _items.find(getUssd)
     const filteredItem = compareID(_items,itemId);
-    console.log("filtered is" + filteredItem);
     setUssd(filteredItem.ussd);
     setOperator(filteredItem.operator);
     setUrl(filteredItem.url);
     setPhone(filteredItem.phone);
     console.log("setting state");
-  }, []);
+  }, [itemId]);
 
   const handleSubmitEditForm = (event) => {
     event.preventDefault();

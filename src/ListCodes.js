@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import Button from "./Button";
 import RandomDigit from "./utils/RandomDigit";
 
-export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClickDelete}) {
+export default function ListCodes({ newItems,onClickEdit, onClickDelete}) {
     const navigate =  useNavigate();
 
   return (

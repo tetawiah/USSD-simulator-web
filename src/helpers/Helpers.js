@@ -1,5 +1,5 @@
 export function compareID (obj,value) {
-    const compareFn = (data) => data.id == value;
+    const compareFn = (data) => data.id === value;
     return obj.find(compareFn);
 }
 

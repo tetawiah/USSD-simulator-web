@@ -1,28 +1,44 @@
-import Button from "./Button";
 import {useSearchParams} from "react-router-dom";
 import {useEffect,useState} from "react";
 
+import Response from "./Response";
+import {retrieveData,compareID} from "./helpers/Helpers";
 
-export default function Response({items,handleUserInput,response,onReceiveResponse}) {
+export default function Request({items}) {
     const [error,setError] = useState("");
     const [searchParams,setSearchParams] = useSearchParams();
     const [isResLoading,setIsResLoading] = useState(false);
-    const itemId = searchParams.get("id");
-    const sessionID = searchParams.get("SID");
+    const [response,setResponse] = useState("");
+    const [userInput,setUserInput] = useState("");
+    const [canDisplayInput,setCanDisplayInput] = useState(true);
 
+    const itemId = searchParams.get("id");
+    const sessionID = searchParams.get("SID")
+
+    function handleUserInput (input) {
+        setUserInput(input);
+    }
+
+    function handleSetResponse(data) {
+        if(data.MSGTYPE === false) {
+            setCanDisplayInput(false);
+        }
+        setResponse(data);
+    }
 
     useEffect(() => {
-        const request = items.find(item => item.id = itemId);
+        console.log("user entered" + userInput);
+        const _items = retrieveData("ussd_data")
+        const request = compareID(_items,itemId);
         console.log(request);
-        console.log('effect to make api call run');
+        console.log('effect to make api call');
             const payload = {
                 USERID : "Spectrum",
                 MSISDN : request.phone,
                 SESSIONID : sessionID,
                 NETWORK : request.operator,
                 MSGTYPE : false,
-                USERDATA : "1" || request.ussd ,
-                //change to userInput
+                USERDATA : userInput || request.ussd
             };
             console.log(payload);
             setError("");
@@ -45,7 +61,7 @@ export default function Response({items,handleUserInput,response,onReceiveRespon
                     return response.json()
                 })
                 .then(data=> {
-                    onReceiveResponse(data);
+                    handleSetResponse(data);
                     setIsResLoading(false);
                 })
                 .catch((error) => {
@@ -53,25 +69,10 @@ export default function Response({items,handleUserInput,response,onReceiveRespon
                     setError(error);
                     setIsResLoading(false);
                 });
-    }, []);
-    //Add userInput
-    return <div>{response}</div>
-    return <div className="res">
-        {error ? (
-            <p className="error">
-                Oops something broke<span>&#128546;</span>
-                <p style={{textAlign : "center"}}>
-                    <Button height={50} content="Retry" onClick={setError("")}></Button></p>
-            </p>
-        ) :  <div className="res-msg-con">
-            {isResLoading ? <p className="res-load"><span>⌛</span>@ Loading....</p>
-                : <div className="res-msg">
-                    {response.MSG.split("\n").map(msg => <p>{msg}</p>)}
-                </div>
-            }
-        </div>}
+    }, [itemId,userInput,sessionID]);
 
-    </div>
+    return <Response response={response} isResLoading={isResLoading} error={error} setError = {setError} canDisplayInput={canDisplayInput} handleUserInput={handleUserInput} />
+
 
 }
 
