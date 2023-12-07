@@ -1,12 +1,19 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Button from "./Button";
 
 export default function EditCode({ item,onEditItem, selectEdit}) {
-  const [ussd, setUssd] = useState(item.ussd);
-  const [operator, setOperator] = useState(item.operator);
-  const [url, setUrl] = useState(item.url);
-  const [phone, setPhone] = useState(item.phone);
+  const [ussd, setUssd] = useState("");
+  const [operator, setOperator] = useState("");
+  const [url, setUrl] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState({});
+
+  useEffect(() => {
+    setUssd(item.ussd);
+    setOperator(item.operator);
+    setUrl(item.url);
+    setPhone(item.phone);
+  }, [item]);
 
   const handleSubmitEditForm = (event) => {
     event.preventDefault();
