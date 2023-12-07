@@ -1,5 +1,7 @@
-import Button from "./Button";
 import {useNavigate} from "react-router-dom";
+
+import Button from "./Button";
+import RandomDigit from "./utils/RandomDigit";
 
 export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClickDelete}) {
     const navigate =  useNavigate();
@@ -13,10 +15,10 @@ export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClick
                       style={{ listStyleType: "none" }}
                       key={item.id}
                   >
-                    <div className="code-btn" onClick={() => onCodeClicked(item)}>
+                    <div className="code-btn" onClick={() => navigate(`request?id=${item.id}&SID=${RandomDigit()}`)}>
                       {item.ussd}
                     </div>
-                    <Button content="✏️" height={50} width={50} onClick={() => navigate(`edit/${item.id}`)} ></Button>
+                    <Button content="✏️" height={50} width={50} onClick={() => navigate(`${item.id}`)} ></Button>
                     <Button content="&times;" height={50} width={50} onClick={() => onClickDelete(item.id)}> </Button>
                   </li>
 
