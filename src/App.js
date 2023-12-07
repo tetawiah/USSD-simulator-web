@@ -21,10 +21,9 @@ export default function App() {
   const [request, setRequest] = useState("");
   const [error, setError] = useState("");
 
-  const[itemsEdit,setItemsEdit] = useState({});
+  const[itemsEdit,setItemsEdit] = useState({prop: ""});
 
   const key = "ussd_data";
-
   function handleIsAddFormOpen() {
     setIsAddFormOpen(!isAddFormOpen);
   }
@@ -57,7 +56,10 @@ export default function App() {
   function handleOnEditClicked(id) {
     setIsAddFormOpen(false);
     setIsEditFormOpen(true);
-    const filtered = items.filter(item=> item.id === id )[0];
+    const filtered = items.find(item => {
+      if (item.id === id) {
+      return item;
+    }} );
     setItemsEdit(filtered);
   }
 
@@ -69,17 +71,22 @@ export default function App() {
 
     });
     localStorage.setItem(key, JSON.stringify(newData));
+    setIsEditFormOpen(false);
+    setIsAddFormOpen(true);
   }
 
   function handleOnDeleteItem (id) {
-    const filtered = items.filter(item=>item.id !== id);
+    let copyOfItems = items;
+    const filtered = copyOfItems.filter(item=>item.id !== id);
     setItems(filtered);
     localStorage.setItem(key, JSON.stringify(filtered));
+    setIsEditFormOpen(false);
   }
 
   function resetError() {
     setError("");
   }
+
 
   useEffect(() => {
     const data = localStorage.getItem(key);

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import Button from "./Button";
-import { v4 as uuidv4 } from "uuid";
 
-export default function EditCode({ item,onEditItem }) {
+export default function EditCode({ item,onEditItem, selectEdit}) {
   const [ussd, setUssd] = useState(item.ussd);
   const [operator, setOperator] = useState(item.operator);
   const [url, setUrl] = useState(item.url);
@@ -12,6 +11,7 @@ export default function EditCode({ item,onEditItem }) {
   const handleSubmitEditForm = (event) => {
     event.preventDefault();
     if (validateForm() === false) return;
+    // onSelectEdit(item.id);
     const editedItem = {
       id: item.id,
       ussd: ussd,
@@ -77,6 +77,7 @@ export default function EditCode({ item,onEditItem }) {
         />
         {error.url && <p className="err-val">{error.url}</p>}
         <br />
+        <label htmlFor="operator">Select Operator</label>
         <select
           name="operator"
           className="form-select"
