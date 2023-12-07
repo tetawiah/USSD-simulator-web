@@ -5,7 +5,7 @@ export default function ListCodes({ newItems,onCodeClicked, onClickEdit, onClick
 
   return (
       <div className="code-side">
-            <ul>
+            <ul className="list-con">
               {newItems.map((item) => (
                   <li
                       className="list-code"

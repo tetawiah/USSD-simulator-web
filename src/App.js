@@ -54,7 +54,6 @@ export default function App() {
   }
 
   function handleOnEditClicked(id) {
-    console.log("Edit code run");
     setIsAddFormOpen(false);
     setIsEditFormOpen(true);
     const copyItems = items;
@@ -138,6 +137,7 @@ export default function App() {
       })
           .then((response) => {
             if (!response.ok) {
+              console.log(response);
               throw new Error("Request could not be processed");
             }
             return response.json()
