@@ -24,7 +24,6 @@ export default function App() {
   const[itemsEdit,setItemsEdit] = useState({});
 
   const key = "ussd_data";
-
   function handleIsAddFormOpen() {
     setIsAddFormOpen(!isAddFormOpen);
   }
@@ -57,7 +56,11 @@ export default function App() {
   function handleOnEditClicked(id) {
     setIsAddFormOpen(false);
     setIsEditFormOpen(true);
-    const filtered = items.filter(item=> item.id === id )[0];
+    const copyItems = items;
+    const filtered = copyItems.find(item => {
+      if (item.id === id) {
+      return item;
+    }} );
     setItemsEdit(filtered);
   }
 
@@ -69,17 +72,22 @@ export default function App() {
 
     });
     localStorage.setItem(key, JSON.stringify(newData));
+    setIsEditFormOpen(false);
+    setIsAddFormOpen(true);
   }
 
   function handleOnDeleteItem (id) {
-    const filtered = items.filter(item=>item.id !== id);
+    let copyOfItems = items;
+    const filtered = copyOfItems.filter(item=>item.id !== id);
     setItems(filtered);
     localStorage.setItem(key, JSON.stringify(filtered));
+    setIsEditFormOpen(false);
   }
 
   function resetError() {
     setError("");
   }
+
 
   useEffect(() => {
     const data = localStorage.getItem(key);
@@ -96,9 +104,8 @@ export default function App() {
   useEffect(() => {
     const newData = [...items, newItem];
     if (Object.values(newItem).length > 0) {
+      setItems(items => [...items,newItem]);
       localStorage.setItem(key, JSON.stringify(newData));
-      setItems(newData);
-
       console.log("Effect to set state with new data");
     }
   }, [newItem]);
@@ -130,6 +137,7 @@ export default function App() {
       })
           .then((response) => {
             if (!response.ok) {
+              console.log(response);
               throw new Error("Request could not be processed");
             }
             return response.json()

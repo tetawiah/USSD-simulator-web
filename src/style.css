@@ -14,7 +14,7 @@
 
 .code-side {
   height: 75vh;
-  max-width: 280px;
+  max-width: 300px;
   background-color: blanchedalmond;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -47,19 +47,22 @@ select {
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: large;
 }
+.list-con {
+  padding: 0.3em;
+}
 
 .list-code {
   display: flex;
   justify-content: space-around;
-  margin-right: 10px;
 }
+
 .code-btn {
   display: block;
-  width: 35%;
-  margin-left: 0.5%;
+  width: 50%;
+  margin-left: 1%;
   margin-right: 1%;
   margin-bottom: 1em;
-  padding: 0.8em 1em ;
+  padding: 0.8em 0.1em ;
   background-color:rgb(224, 206, 176);
   font-size: 1.2em;
   border-radius: 4px;

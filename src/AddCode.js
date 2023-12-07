@@ -32,10 +32,10 @@ export default function AddCode({ onItemChange }) {
   };
 
   const validatePhone = () => {
-    if (!/\d{10}/.test(phone)) {
+    if (!/\d{12}/.test(phone)) {
       setError((err) => ({
         ...err,
-        phone: "Phone number must be exactly 10 digits",
+        phone: "Phone number must be exactly 12 digits",
       }));
     } else {
       setError((err) => ({ ...err, phone: "" }));
