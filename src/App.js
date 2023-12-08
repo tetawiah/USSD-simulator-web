@@ -3,31 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { createContext } from "react";
 
 import AddCode from "./AddCode";
-import ListCodes from "./ListCodes";
-import Button from "./Button";
-import InputField from "./InputField";
 import Request from "./Request";
-import RandomDigit from "./utils/RandomDigit";
 import EditCode from "./EditCode";
 import Layout from "./pages/Layout";
-import Sidebar from "./Sidebar";
 
 export const AppContext = createContext();
 export default function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({});
-  const [isAddFormOpen, setIsAddFormOpen] = useState(true);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-
-  // const [response,setResponse] = useState("");
-  const [userInput, setUserInput] = useState("");
-  const [isResLoading, setIsResLoading] = useState(false);
-  const [canDisplayInput, setCanDisplayInput] = useState(false);
-
-  const [request, setRequest] = useState("");
-  const [error, setError] = useState("");
-
-  const [itemsEdit, setItemsEdit] = useState({});
 
   const key = "ussd_data";
 
@@ -35,12 +18,12 @@ export default function App() {
     setNewItem(newItem);
   }
 
-  function handleCodeClicked(request) {
-    setCanDisplayInput(true);
-    console.log("url is being set");
-    const sessionID = RandomDigit();
-    setRequest({ ...request, sessionID });
-  }
+  // function handleCodeClicked(request) {
+  //   setCanDisplayInput(true);
+  //   console.log("url is being set");
+  //   const sessionID = RandomDigit();
+  //   setRequest({ ...request, sessionID });
+  // }
 
   function handleOnEditItem(editedItem) {
     let newData = [];
@@ -49,8 +32,6 @@ export default function App() {
       return (newData = [...filtered, editedItem]);
     });
     localStorage.setItem(key, JSON.stringify(newData));
-    setIsEditFormOpen(false);
-    setIsAddFormOpen(true);
   }
 
   function handleOnDeleteItem(id) {
@@ -61,7 +42,6 @@ export default function App() {
     const filtered = copyOfItems.filter((item) => item.id !== id);
     setItems(filtered);
     localStorage.setItem(key, JSON.stringify(filtered));
-    setIsEditFormOpen(false);
   }
 
   useEffect(() => {
@@ -89,9 +69,8 @@ export default function App() {
     <BrowserRouter>
       <AppContext.Provider
         value={{
-          items: items,
-          handleOnDeleteItem,
-          canDisplayInput,
+          newItems: items,
+          onClickDelete: handleOnDeleteItem,
         }}
       >
         <Routes>
@@ -105,7 +84,7 @@ export default function App() {
               path=":id"
               element={<EditCode onEditItem={handleOnEditItem} />}
             />
-            <Route path="request" element={<Request items={items} />} />
+            <Route path="request" element={<Request />} />
           </Route>
           <Route path="*" element={<p>Page not found</p>} />
         </Routes>

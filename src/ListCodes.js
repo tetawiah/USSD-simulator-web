@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "./Button";
 import RandomDigit from "./utils/RandomDigit";
+import { useContext } from "react";
+import { AppContext } from "./App";
 
-export default function ListCodes({ newItems, onClickDelete }) {
+export default function ListCodes() {
   const navigate = useNavigate();
-
+  const { newItems, onClickDelete } = useContext(AppContext);
   return (
     <div className="code-side">
       <ul className="list-con">

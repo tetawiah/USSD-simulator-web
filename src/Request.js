@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Response from "./Response";
 import { retrieveData, compareID } from "./helpers/Helpers";
 
-export default function Request({ items }) {
+export default function Request() {
   const [error, setError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const [isResLoading, setIsResLoading] = useState(false);
