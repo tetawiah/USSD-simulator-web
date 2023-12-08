@@ -1,78 +1,83 @@
-import {useSearchParams} from "react-router-dom";
-import {useEffect,useState} from "react";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Response from "./Response";
-import {retrieveData,compareID} from "./helpers/Helpers";
+import { retrieveData, compareID } from "./helpers/Helpers";
 
-export default function Request({items}) {
-    const [error,setError] = useState("");
-    const [searchParams,setSearchParams] = useSearchParams();
-    const [isResLoading,setIsResLoading] = useState(false);
-    const [response,setResponse] = useState("");
-    const [userInput,setUserInput] = useState("");
-    const [canDisplayInput,setCanDisplayInput] = useState(true);
+export default function Request({ items }) {
+  const [error, setError] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isResLoading, setIsResLoading] = useState(false);
+  const [response, setResponse] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [canDisplayInput, setCanDisplayInput] = useState(true);
 
-    const itemId = searchParams.get("id");
-    const sessionID = searchParams.get("SID")
+  const itemId = searchParams.get("id");
+  const sessionID = searchParams.get("SID");
 
-    function handleUserInput (input) {
-        setUserInput(input);
+  function handleUserInput(input) {
+    setUserInput(input);
+  }
+
+  function handleSetResponse(data) {
+    if (data.MSGTYPE === false) {
+      setCanDisplayInput(false);
     }
+    setResponse(data);
+  }
 
-    function handleSetResponse(data) {
-        if(data.MSGTYPE === false) {
-            setCanDisplayInput(false);
+  useEffect(() => {
+    console.log("user entered" + userInput);
+    const _items = retrieveData("ussd_data");
+    const request = compareID(_items, itemId);
+    console.log(request);
+    console.log("effect to make api call");
+    const payload = {
+      USERID: "Spectrum",
+      MSISDN: request.phone,
+      SESSIONID: sessionID,
+      NETWORK: request.operator,
+      MSGTYPE: false,
+      USERDATA: userInput.trim() || request.ussd,
+    };
+    console.log(payload);
+    setError("");
+    console.log("sendingg request");
+    setIsResLoading(true);
+    fetch(request.url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+          throw new Error("Request could not be processed");
         }
-        setResponse(data);
-    }
+        return response.json();
+      })
+      .then((data) => {
+        handleSetResponse(data);
+        setIsResLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error);
+        setIsResLoading(false);
+      });
+  }, [itemId, userInput, sessionID]);
 
-    useEffect(() => {
-        console.log("user entered" + userInput);
-        const _items = retrieveData("ussd_data")
-        const request = compareID(_items,itemId);
-        console.log(request);
-        console.log('effect to make api call');
-            const payload = {
-                USERID : "Spectrum",
-                MSISDN : request.phone,
-                SESSIONID : sessionID,
-                NETWORK : request.operator,
-                MSGTYPE : false,
-                USERDATA : userInput || request.ussd
-            };
-            console.log(payload);
-            setError("");
-            console.log("sendingg request");
-            setIsResLoading(true);
-            fetch(request.url, {
-                method: "POST",
-                headers: {
-                    "Accept" : "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload)
-
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        console.log(response);
-                        throw new Error("Request could not be processed");
-                    }
-                    return response.json()
-                })
-                .then(data=> {
-                    handleSetResponse(data);
-                    setIsResLoading(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setError(error);
-                    setIsResLoading(false);
-                });
-    }, [itemId,userInput,sessionID]);
-
-    return <Response response={response} isResLoading={isResLoading} error={error} setError = {setError} canDisplayInput={canDisplayInput} handleUserInput={handleUserInput} />
-
-
+  return (
+    <Response
+      response={response}
+      isResLoading={isResLoading}
+      error={error}
+      setError={setError}
+      canDisplayInput={canDisplayInput}
+      handleUserInput={handleUserInput}
+    />
+  );
 }
-

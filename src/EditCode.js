@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import {useParams} from "react-router-dom";
-import {retrieveData,compareID} from "./helpers/Helpers"
+import { useParams } from "react-router-dom";
+import { retrieveData, compareID } from "./helpers/Helpers";
 
 import Button from "./Button";
-
+import ErrorComponent from "./ErrorComponent";
 
 export default function EditCode({ onEditItem, selectEdit }) {
   const [ussd, setUssd] = useState("");
@@ -13,7 +13,7 @@ export default function EditCode({ onEditItem, selectEdit }) {
   const [error, setError] = useState({});
 
   const params = useParams();
-  const itemId =  params.id;
+  const itemId = params.id;
 
   // const getUssd = (ussd) => ussd.id == itemId
 
@@ -21,12 +21,16 @@ export default function EditCode({ onEditItem, selectEdit }) {
     const _items = retrieveData("ussd_data");
     console.log("items" + _items);
     // const filteredItem = _items.find(getUssd)
-    const filteredItem = compareID(_items,itemId);
-    setUssd(filteredItem.ussd);
-    setOperator(filteredItem.operator);
-    setUrl(filteredItem.url);
-    setPhone(filteredItem.phone);
-    console.log("setting state");
+    const filteredItem = compareID(_items, itemId);
+    if (filteredItem) {
+      setUssd(filteredItem.ussd);
+      setOperator(filteredItem.operator);
+      setUrl(filteredItem.url);
+      setPhone(filteredItem.phone);
+      console.log("setting state");
+    } else {
+      setError({ id: "USSD code ID is invalid" });
+    }
   }, [itemId]);
 
   const handleSubmitEditForm = (event) => {
@@ -75,60 +79,67 @@ export default function EditCode({ onEditItem, selectEdit }) {
 
   return (
     <div className="form-container">
-      <div className="sub-form">
-        <form className="my-form" onSubmit={handleSubmitEditForm}>
-          <label htmlFor="ussd">USSD Code</label>
-          <input
-            name="ussd"
-            className="form-input"
-            required
-            value={ussd}
-            onBlur={validateUssd}
-            onChange={(e) => setUssd(e.target.value)}
-          />
-          {error.ussd && <p className="err-val">{error.ussd}</p>}
-          <br />
-          <label htmlFor="url">URL</label>
-          <input
-            type="text"
-            name="url"
-            className="form-input"
-            required
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          {error.url && <p className="err-val">{error.url}</p>}
-          <br />
-          <label htmlFor="operator">Select Operator</label>
-          <select
-            name="operator"
-            className="form-select"
-            required
-            value={operator}
-            onChange={(e) => setOperator(e.target.value)}
-          >
-            <option disabled>Select Operator</option>
-            <option>MTN</option>
-            <option>Vodafone</option>
-            <option>AT</option>
-          </select>
-          <br />
-          <label htmlFor="phone">Phone number</label>
-          <input
-            name="phone"
-            className="form-input"
-            required
-            value={phone}
-            onBlur={validatePhone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          {error.phone && <p className="err-val">{error.phone}</p>}
-          <br />
-          <div className="form-btn-div">
-            <Button content="Confirm Change" size={150} type="submit" />
-          </div>
-        </form>
-      </div>
+      {(error.id && (
+        <ErrorComponent
+          message={error.id}
+          onClose={() => setError({ id: "" })}
+        />
+      )) || (
+        <div className="sub-form">
+          <form className="my-form" onSubmit={handleSubmitEditForm}>
+            <label htmlFor="ussd">USSD Code</label>
+            <input
+              name="ussd"
+              className="form-input"
+              required
+              value={ussd}
+              onBlur={validateUssd}
+              onChange={(e) => setUssd(e.target.value)}
+            />
+            {error.ussd && <p className="err-val">{error.ussd}</p>}
+            <br />
+            <label htmlFor="url">URL</label>
+            <input
+              type="text"
+              name="url"
+              className="form-input"
+              required
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
+            {error.url && <p className="err-val">{error.url}</p>}
+            <br />
+            <label htmlFor="operator">Select Operator</label>
+            <select
+              name="operator"
+              className="form-select"
+              required
+              value={operator}
+              onChange={(e) => setOperator(e.target.value)}
+            >
+              <option disabled>Select Operator</option>
+              <option>MTN</option>
+              <option>Vodafone</option>
+              <option>AT</option>
+            </select>
+            <br />
+            <label htmlFor="phone">Phone number</label>
+            <input
+              name="phone"
+              className="form-input"
+              required
+              value={phone}
+              onBlur={validatePhone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            {error.phone && <p className="err-val">{error.phone}</p>}
+            <br />
+            <div className="form-btn-div">
+              <Button content="Confirm Change" size={150} type="submit" />
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
