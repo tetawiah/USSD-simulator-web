@@ -7,7 +7,7 @@ import { AppContext } from "./App";
 
 export default function ListCodes() {
   const navigate = useNavigate();
-  const { newItems, onClickDelete } = useContext(AppContext);
+  const { newItems, onClickDelete, onSetActiveId } = useContext(AppContext);
   return (
     <div className="code-side">
       <ul className="list-con">
@@ -29,13 +29,18 @@ export default function ListCodes() {
               content="✏️"
               height={50}
               width={50}
-              onClick={() => navigate(`${item.id}`)}
+              onClick={() => {
+                navigate(`${item.id}`);
+                onSetActiveId(item.id);
+              }}
             ></Button>
             <Button
               content="&times;"
               height={50}
               width={50}
-              onClick={() => onClickDelete(item.id)}
+              onClick={() => {
+                onClickDelete(item.id);
+              }}
             ></Button>
           </li>
         ))}

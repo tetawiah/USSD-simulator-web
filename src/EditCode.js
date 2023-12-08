@@ -85,7 +85,11 @@ export default function EditCode({ onEditItem, selectEdit }) {
       {(error.id && (
         <ErrorComponent
           message={error.id}
-          onClose={() => setError({ id: "" })}
+          onClose={() => {
+            setError({ id: "" });
+            console.log("i run");
+            navigate("/");
+          }}
         />
       )) || (
         <div className="sub-form">

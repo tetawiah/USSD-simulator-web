@@ -6,13 +6,20 @@ import AddCode from "./AddCode";
 import Request from "./Request";
 import EditCode from "./EditCode";
 import Layout from "./pages/Layout";
+import { insertData, retrieveData } from "./helpers/Helpers";
 
+const ussdDataKey = "ussd_data";
+const activeIdKey = "activeId";
 export const AppContext = createContext();
 export default function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({});
+  const [activeId, setActiveId] = useState(() => retrieveData(activeIdKey));
 
-  const key = "ussd_data";
+  function handleOnSetActiveId(id) {
+    setActiveId(id);
+    insertData(activeIdKey, id);
+  }
 
   function handleOnItemChange(newItem) {
     setNewItem(newItem);
@@ -31,21 +38,25 @@ export default function App() {
       const filtered = items.filter((item) => item.id !== editedItem.id);
       return (newData = [...filtered, editedItem]);
     });
-    localStorage.setItem(key, JSON.stringify(newData));
+    localStorage.setItem(ussdDataKey, JSON.stringify(newData));
   }
 
   function handleOnDeleteItem(id) {
-    if (!window.confirm("Are you sure you want to delete ?")) {
-      return;
-    }
+    console.log("activeId" + activeId);
+    console.log("Id is" + id);
+    if (activeId === id)
+      return alert("You can only delete after editing is done");
+
+    if (!window.confirm("Are you sure you want to delete ?")) return;
+
     let copyOfItems = items;
     const filtered = copyOfItems.filter((item) => item.id !== id);
     setItems(filtered);
-    localStorage.setItem(key, JSON.stringify(filtered));
+    localStorage.setItem(ussdDataKey, JSON.stringify(filtered));
   }
 
   useEffect(() => {
-    const data = localStorage.getItem(key);
+    const data = localStorage.getItem(ussdDataKey);
     const oldData = data ? JSON.parse(data) : [];
     if (oldData.length > 0) {
       setItems(oldData);
@@ -60,7 +71,7 @@ export default function App() {
     const newData = [...items, newItem];
     if (Object.values(newItem).length > 0) {
       setItems((items) => [...items, newItem]);
-      localStorage.setItem(key, JSON.stringify(newData));
+      localStorage.setItem(ussdDataKey, JSON.stringify(newData));
       console.log("Effect to set state with new data");
     }
   }, [newItem]);
@@ -71,6 +82,7 @@ export default function App() {
         value={{
           newItems: items,
           onClickDelete: handleOnDeleteItem,
+          onSetActiveId: handleOnSetActiveId,
         }}
       >
         <Routes>

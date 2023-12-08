@@ -7,13 +7,13 @@ import { retrieveData, compareID } from "./helpers/Helpers";
 export default function Request() {
   const [error, setError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const sessionID = searchParams.get("SID");
+  const itemId = searchParams.get("id");
   const [isResLoading, setIsResLoading] = useState(false);
   const [response, setResponse] = useState("");
   const [userInput, setUserInput] = useState("");
   const [canDisplayInput, setCanDisplayInput] = useState(true);
-
-  const itemId = searchParams.get("id");
-  const sessionID = searchParams.get("SID");
+  // const [sessionId, setSessionId] = useState(() => sessionID);
 
   function handleUserInput(input) {
     setUserInput(input);
@@ -36,6 +36,7 @@ export default function Request() {
       USERID: "Spectrum",
       MSISDN: request.phone,
       SESSIONID: sessionID,
+      // SESSIONID: sessionId,
       NETWORK: request.operator,
       MSGTYPE: false,
       USERDATA: userInput.trim() || request.ussd,
