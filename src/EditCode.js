@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { retrieveData, compareID } from "./helpers/Helpers";
 
 import Button from "./Button";
@@ -14,6 +14,8 @@ export default function EditCode({ onEditItem, selectEdit }) {
 
   const params = useParams();
   const itemId = params.id;
+
+  const navigate = useNavigate();
 
   // const getUssd = (ussd) => ussd.id == itemId
 
@@ -49,6 +51,7 @@ export default function EditCode({ onEditItem, selectEdit }) {
     setOperator("");
     setUrl("");
     setPhone("");
+    navigate("/");
   };
 
   const validateForm = () => {
