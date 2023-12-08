@@ -98,7 +98,7 @@ export default function App() {
           <Route index element={<Navigate to="app" />} />
           <Route path="app" element={<Layout />}>
             <Route
-              path="create"
+              path="codes"
               element={<AddCode onItemChange={handleOnItemChange} />}
             />
             <Route
