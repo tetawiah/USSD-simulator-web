@@ -1,101 +1,67 @@
-import AddCode from "./AddCode";
-import ListCodes from "./ListCodes";
-import Button from "./Button";
-import InputField from "./InputField";
 import { useEffect, useState } from "react";
-import Response from "./Response";
-import RandomDigit from "./utils/RandomDigit";
-import EditCode from "./EditCode";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { createContext } from "react";
 
+import AddCode from "./AddCode";
+import Request from "./Request";
+import EditCode from "./EditCode";
+import Layout from "./pages/Layout";
+import { insertData, retrieveData } from "./helpers/Helpers";
+
+const ussdDataKey = "ussd_data";
+const activeIdKey = "activeId";
+export const AppContext = createContext();
 export default function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({});
-  const [isAddFormOpen, setIsAddFormOpen] = useState(true);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [activeId, setActiveId] = useState(() => retrieveData(activeIdKey));
 
-  const [response,setResponse] = useState("");
-  const [userInput,setUserInput] = useState("");
-  const [isResLoading,setIsResLoading] = useState(false);
-  const [canDisplayInput,setCanDisplayInput] = useState(false);
-
-  const [request, setRequest] = useState("");
-  const [error, setError] = useState("");
-
-  const[itemsEdit,setItemsEdit] = useState({});
-
-  const key = "ussd_data";
-  function handleIsAddFormOpen() {
-    setIsAddFormOpen(!isAddFormOpen);
+  function handleOnSetActiveId(id) {
+    setActiveId(id);
+    insertData(activeIdKey, id);
   }
 
   function handleOnItemChange(newItem) {
     setNewItem(newItem);
   }
 
-  function handleUserInput (input) {
-    console.log('send button clicked');
-    setUserInput(input);
-  }
+  // function handleCodeClicked(request) {
+  //   setCanDisplayInput(true);
+  //   console.log("url is being set");
+  //   const sessionID = RandomDigit();
+  //   setRequest({ ...request, sessionID });
+  // }
 
-  function handleSetResponse(data) {
-    setIsAddFormOpen(false);
-    if(data.MSGTYPE === false) {
-      setCanDisplayInput(false);
-    }
-    console.log(data)
-    setResponse(data);
-  }
-
-  function handleCodeClicked (request) {
-    setCanDisplayInput(true)
-    console.log("url is being set");
-    const sessionID = RandomDigit();
-    setRequest({...request,sessionID});
-  }
-
-  function handleOnEditClicked(id) {
-    setIsAddFormOpen(false);
-    setIsEditFormOpen(true);
-    const copyItems = items;
-    const filtered = copyItems.find(item => {
-      if (item.id === id) {
-      return item;
-    }} );
-    setItemsEdit(filtered);
-  }
-
-  function handleOnEditItem (editedItem) {
+  function handleOnEditItem(editedItem) {
     let newData = [];
-    setItems(items=> {
-      const filtered = items.filter(item => item.id !== editedItem.id);
-      return newData = [...filtered,editedItem];
-
+    setItems((items) => {
+      const filtered = items.filter((item) => item.id !== editedItem.id);
+      return (newData = [...filtered, editedItem]);
     });
-    localStorage.setItem(key, JSON.stringify(newData));
-    setIsEditFormOpen(false);
-    setIsAddFormOpen(true);
+    localStorage.setItem(ussdDataKey, JSON.stringify(newData));
   }
 
-  function handleOnDeleteItem (id) {
+  function handleOnDeleteItem(id) {
+    console.log("activeId" + activeId);
+    console.log("Id is" + id);
+    if (activeId === id)
+      return alert("You can only delete after editing is done");
+
+    if (!window.confirm("Are you sure you want to delete ?")) return;
+
     let copyOfItems = items;
-    const filtered = copyOfItems.filter(item=>item.id !== id);
+    const filtered = copyOfItems.filter((item) => item.id !== id);
     setItems(filtered);
-    localStorage.setItem(key, JSON.stringify(filtered));
-    setIsEditFormOpen(false);
+    localStorage.setItem(ussdDataKey, JSON.stringify(filtered));
   }
-
-  function resetError() {
-    setError("");
-  }
-
 
   useEffect(() => {
-    const data = localStorage.getItem(key);
+    const data = localStorage.getItem(ussdDataKey);
     const oldData = data ? JSON.parse(data) : [];
     if (oldData.length > 0) {
       setItems(oldData);
       console.log(
-          "Effect to get the old data and set it when component first mounts"
+        "Effect to get the old data and set it when component first mounts",
       );
     }
   }, []);
@@ -104,77 +70,57 @@ export default function App() {
   useEffect(() => {
     const newData = [...items, newItem];
     if (Object.values(newItem).length > 0) {
-      setItems(items => [...items,newItem]);
-      localStorage.setItem(key, JSON.stringify(newData));
+      setItems((items) => [...items, newItem]);
+      localStorage.setItem(ussdDataKey, JSON.stringify(newData));
       console.log("Effect to set state with new data");
     }
   }, [newItem]);
 
-
-  useEffect(() => {
-    console.log('effect to make api call run');
-    if (request.url) {
-      const payload = {
-        USERID : "Spectrum",
-        MSISDN : request.phone,
-        SESSIONID : request.sessionID,
-        NETWORK : request.operator,
-        MSGTYPE : false,
-        USERDATA : userInput || request.ussd ,
-      };
-      console.log(payload);
-      setError("");
-      console.log("sendingg request");
-      setIsResLoading(true);
-      fetch(request.url, {
-        method: "POST",
-        headers: {
-          "Accept" : "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload)
-
-      })
-          .then((response) => {
-            if (!response.ok) {
-              console.log(response);
-              throw new Error("Request could not be processed");
-            }
-            return response.json()
-          })
-          .then(data=> {
-            handleSetResponse(data);
-            setIsResLoading(false);
-          })
-          .catch((error) => {
-            console.log(error);
-            setError(error);
-            setIsResLoading(false);
-          });
-    }
-  }, [request,userInput]);
-
-
   return (
-      <div className="content">
-        <div className="l-side">
-          <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
-          <ListCodes newItems={items} onCodeClicked={handleCodeClicked} onClickEdit={handleOnEditClicked} onClickDelete={handleOnDeleteItem}/>
-        </div>
-        <div className="r-side">
-          {isAddFormOpen ? (
-              <div className="form-container">
-                <AddCode onItemChange={handleOnItemChange} />
-              </div>
-          ) : null}
-          {isEditFormOpen ? (
-              <div className="form-container">
-                <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
-              </div>
-          ): null}
-          {response && <Response response={response} isResLoading={isResLoading} error={error} resetError={resetError}/>}
-              {canDisplayInput && <InputField onSubmitInput={handleUserInput}/>}
-        </div>
-      </div>
+    <BrowserRouter>
+      <AppContext.Provider
+        value={{
+          newItems: items,
+          onClickDelete: handleOnDeleteItem,
+          onSetActiveId: handleOnSetActiveId,
+        }}
+      >
+        <Routes>
+          <Route index element={<Navigate to="app" />} />
+          <Route path="app" element={<Layout />}>
+            <Route
+              path="codes"
+              element={<AddCode onItemChange={handleOnItemChange} />}
+            />
+            <Route
+              path=":id"
+              element={<EditCode onEditItem={handleOnEditItem} />}
+            />
+            <Route path="request" element={<Request />} />
+          </Route>
+          <Route path="*" element={<p>Page not found</p>} />
+        </Routes>
+      </AppContext.Provider>
+    </BrowserRouter>
+    // <div className="content">
+    //   <div className="l-side">
+    //     <Button content="&#43; New Code" width={200} onClick={handleIsAddFormOpen} />
+    //     <ListCodes newItems={items} onCodeClicked={handleCodeClicked} onClickEdit={handleOnEditClicked} onClickDelete={handleOnDeleteItem}/>
+    //   </div>
+    //   <div className="r-side">
+    //     {isAddFormOpen ? (
+    //         <div className="form-container">
+    //           <AddCode onItemChange={handleOnItemChange} />
+    //         </div>
+    //     ) : null}
+    //     {isEditFormOpen ? (
+    //         <div className="form-container">
+    //           <EditCode item={itemsEdit} onEditItem={handleOnEditItem}></EditCode>
+    //         </div>
+    //     ): null}
+    //     {response && <Response response={response} isResLoading={isResLoading} error={error} resetError={resetError}/>}
+    //         {canDisplayInput && <InputField onSubmitInput={handleUserInput}/>}
+    //   </div>
+    // </div>
   );
 }

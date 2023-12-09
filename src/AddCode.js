@@ -54,58 +54,60 @@ export default function AddCode({ onItemChange }) {
   };
 
   return (
-    <div className="sub-form">
-      <form className="my-form" onSubmit={handleSubmitForm}>
-        <label htmlFor="ussd">USSD Code</label>
-        <input
-          name="ussd"
-          className="form-input"
-          required
-          value={ussd}
-          onBlur={validateUssd}
-          onChange={(e) => setUssd(e.target.value)}
-        />
-        {error.ussd && <p className="err-val">{error.ussd}</p>}
-        <br />
-        <label htmlFor="url">URL</label>
-        <input
-          type="text"
-          name="url"
-          className="form-input"
-          required
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        {error.url && <p className="err-val">{error.url}</p>}
-        <br />
-        <select
-          name="operator"
-          className="form-select"
-          required
-          value={operator}
-          onChange={(e) => setOperator(e.target.value)}
-        >
-          <option disabled>Select Operator</option>
-          <option>MTN</option>
-          <option>Vodafone</option>
-          <option>AT</option>
-        </select>
-        <br />
-        <label htmlFor="phone">Phone number</label>
-        <input
-          name="phone"
-          className="form-input"
-          required
-          value={phone}
-          onBlur={validatePhone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        {error.phone && <p className="err-val">{error.phone}</p>}
-        <br />
-        <div className="form-btn-div">
-          <Button content="Submit" size={150} type="submit" />
-        </div>
-      </form>
+    <div className="form-container">
+      <div className="sub-form">
+        <form className="my-form" onSubmit={handleSubmitForm}>
+          <label htmlFor="ussd">USSD Code</label>
+          <input
+            name="ussd"
+            className="form-input"
+            required
+            value={ussd}
+            onBlur={validateUssd}
+            onChange={(e) => setUssd(e.target.value)}
+          />
+          {error.ussd && <p className="err-val">{error.ussd}</p>}
+          <br />
+          <label htmlFor="url">URL</label>
+          <input
+            type="text"
+            name="url"
+            className="form-input"
+            required
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          {error.url && <p className="err-val">{error.url}</p>}
+          <br />
+          <select
+            name="operator"
+            className="form-select"
+            required
+            value={operator}
+            onChange={(e) => setOperator(e.target.value)}
+          >
+            <option disabled>Select Operator</option>
+            <option>MTN</option>
+            <option>Vodafone</option>
+            <option>AT</option>
+          </select>
+          <br />
+          <label htmlFor="phone">Phone number</label>
+          <input
+            name="phone"
+            className="form-input"
+            required
+            value={phone}
+            onBlur={validatePhone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          {error.phone && <p className="err-val">{error.phone}</p>}
+          <br />
+          <div className="form-btn-div">
+            <Button content="Submit" size={150} type="submit" />
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
